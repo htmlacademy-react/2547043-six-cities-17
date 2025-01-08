@@ -9,7 +9,7 @@ function FavoritesPage(/* props: FavoritesProps */): JSX.Element {
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <a className="header__logo-link" href="main.html">
+              <a className="header__logo-link" href="/">
                 <img
                   className="header__logo"
                   src="img/logo.svg"
