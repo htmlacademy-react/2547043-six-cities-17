@@ -1,28 +1,51 @@
-// type PlaceCardProps = {
+import { AppRoute } from '../../const';
+import { Offer } from '../../mocks/offers';
+import { Link } from 'react-router-dom';
 
-// }
+type PlaceCardProps = {
+  offer: Offer;
+  updateActiveCard: () => void;
+  pageLocation: AppRoute;
+}
 
-function PlaceCard(/* props: PlaceCardProps */): JSX.Element {
+function PlaceCard({ offer, updateActiveCard, pageLocation }: PlaceCardProps): JSX.Element {
+  const widthRating = `${offer.rating * 20}%`;
+  const capitalizedType = `${offer.type[0].toUpperCase() + offer.type.slice(1)}`;
+  let imageWidth;
+  let imageHeight;
+  switch (pageLocation) {
+    case AppRoute.Root:
+      imageHeight = 200;
+      imageWidth = 260;
+      break;
+    case AppRoute.Favorites:
+      imageHeight = 110;
+      imageWidth = 150;
+      break;
+  }
   return (
-    <article className="cities__card place-card">
-      <div className="place-card__mark">
-        <span>Premium</span>
-      </div>
-      <div className="cities__image-wrapper place-card__image-wrapper">
+    <article className={`${pageLocation === AppRoute.Root && 'cities' || pageLocation === AppRoute.Favorites && 'favorites'}__card place-card`} onMouseEnter={() => {
+      if(pageLocation === AppRoute.Root) {
+        updateActiveCard();
+      }
+    }}
+    >
+      {offer.isPremium && <div className="place-card__mark"><span>Premium</span></div>}
+      <div className={`${pageLocation === AppRoute.Root && 'cities' || pageLocation === AppRoute.Favorites && 'favorites'}__image-wrapper place-card__image-wrapper`}>
         <a href="#">
           <img
             className="place-card__image"
-            src="img/apartment-01.jpg"
-            width={260}
-            height={200}
+            src={offer.previewImage}
+            width={imageWidth}
+            height={imageHeight}
             alt="Place image"
           />
         </a>
       </div>
-      <div className="place-card__info">
+      <div className={`${pageLocation === AppRoute.Root && 'place-card__info' || pageLocation === AppRoute.Favorites && 'favorites__card-info place-card__info'}`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">€120</b>
+            <b className="place-card__price-value">€{offer.price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
           <button
@@ -40,17 +63,17 @@ function PlaceCard(/* props: PlaceCardProps */): JSX.Element {
           </button>
         </div>
         <div className="place-card__rating rating">
-          <div className="place-card__stars rating__stars">
-            <span style={{ width: '80%' }} />
+          <div className="place-card__stars rating__stars">s
+            <span style={{ width: widthRating }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">
-            Beautiful &amp; luxurious apartment at great location
-          </a>
+          <Link to={`${AppRoute.Offer}/${offer.id}`}>
+            {offer.title}
+          </Link>
         </h2>
-        <p className="place-card__type">Apartment</p>
+        <p className="place-card__type">{capitalizedType}</p>
       </div>
     </article>
   );
